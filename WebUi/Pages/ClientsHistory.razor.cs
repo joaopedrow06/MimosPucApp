@@ -59,7 +59,7 @@ public partial class ClientsHistory
     }
     private void GoHome()
     {
-        UriHelper.NavigateTo("/");
+        UriHelper.NavigateTo("/home");
     }
     private void Submit()
     {

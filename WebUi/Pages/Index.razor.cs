@@ -6,48 +6,55 @@ namespace WebUi.Pages;
 
 public partial class Index
 {
-    [Inject]
-    private AppointmentsService AppointmentsService { get; set; } = default!;
-    [Inject]
-    private NavigationManager UriHelper { get; set; } = default!;
-    [Inject]
-    private IDialogService DialogService { get; set; } = default!;
-    public ServiceResponse<List<Appointments>> Response { get; set; } = default!;
-    public List<Appointments> Appointments { get; set; } = default!;
-    protected override async Task OnInitializedAsync()
+    [Inject] UsersService UsersService { get; set; } = default!;
+    [Inject] private NavigationManager UriHelper { get; set; } = default!;
+    [Inject] ISnackbar SnackbarService { get; set; } = default!;
+    public string username { get; set; } = "";
+    public string password { get; set; } = "";
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    bool isShow;
+
+    public async void ValidateLogin()
     {
-        Response = await AppointmentsService.GetAll();
-        if(Response is not null)
+        Users attemptLogin = new Users()
         {
-            Appointments = Response.Data!;
+            Name = username,
+            Password = password
+        };
+        var ValidLogin = await UsersService.ValidateUser(attemptLogin);
+        var message = ValidLogin.Content.ReadAsStringAsync().Result;
+        if (ValidLogin.IsSuccessStatusCode)
+        {
+            GoHome();
         }
-        StateHasChanged();
+        else
+        {
+            SnackbarService.Add<MudChip>(new Dictionary<string, object>() {
+                { "Text", message },
+                { "Color", Color.Primary }
+                });
+        }
     }
+    void ButtonTestclick()
+    {
+        if(isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
     private void GoHome()
     {
-        UriHelper.NavigateTo("/");
-    }
-    private void Submit()
-    {
-        UriHelper.NavigateTo("/Agendapetshop");
-    }
-    private void ClientHistory()
-    {
-        UriHelper.NavigateTo("/ClientHistory");
-    }
-    private void VetHistory()
-    {
-        UriHelper.NavigateTo("/Agendaveterinaria");
-    }
-    private void HistoricoPets()
-    {
-        UriHelper.NavigateTo("/HistoryPet");
-    }
-    private async Task NovoAgendamentoAtendimento()
-    {
-        var parameters = new DialogParameters<NovoAgendamento>();
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, NoHeader = true };
-        var dialog = await DialogService.Show<NovoAgendamento>("Novo atendimento", parameters, options).Result;
+        UriHelper.NavigateTo("/home");
     }
 
 }

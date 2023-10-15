@@ -63,6 +63,20 @@ public class UsersController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
+    [HttpPost("ValidateUser")]
+    public async Task<ActionResult<ServiceResponse<Users>>> ValidateUser([Required] Users User)
+    {
+        try
+        {
+            var UserResponse = await _UsersService.ValidateUser(User);
+            return Ok(UserResponse);
+        }
+        catch (Exception e)
+        {
+
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
     //[HttpPut("{id:long:min(1)}")]
     //public async Task<IActionResult> Put([FromRoute] long id, [FromBody] Users User)
     //{

@@ -12,7 +12,9 @@ public class AppointmentsService
     public AppointmentsService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        apiUri = "https://deploy-api-mimos.azurewebsites.net/api/Appointments";
+        //var api = "https://localhost:7019/";
+        var api = "https://deploy-api-mimos.azurewebsites.net/";
+        apiUri = $"{api}api/Appointments";
     }
 
     public async Task<ServiceResponse<List<Appointments>>> GetAll()

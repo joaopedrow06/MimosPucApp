@@ -1,91 +1,24 @@
 ﻿@page "/"
 @using MudBlazor
 
-<div>
-    <nav>
-        <form class="form-inline">
-            <button type="submit" class="btn btn-success bu-defaul c-b-green">
-                <span class="material-icons">
-                    home
-                </span>
-                <div>
-                    Home
-                </div>
-            </button>
-            <button onclick="@Submit" type="submit" class="btn btn-success bu-defaul c-b-green">
-                <span class="material-icons">
-                    calendar_month
-                </span>
-                <div>
-                    Agenda Banho
-                </div>
-            </button>
-            <button onclick="@VetHistory" type="submit" class="btn btn-success bu-defaul c-b-green">
-                <span class="material-icons">
-                    person
-                </span>
-                <div>
-                    Agenda veterinária Veterinário
-                </div>
-            </button>
-            <button onclick="@ClientHistory" type="submit" class="btn btn-success bu-defaul c-b-green">
-                <span class="material-icons">
-                    person
-                </span>
-                <div>
-                    Clientes
-                </div>
-            </button>
-            <button onclick="@HistoricoPets" type="submit" class="btn btn-success bu-defaul c-b-green">
-                <span class="material-icons">
-                    history
-                </span>
-                <div>
-                    Histórico
-                </div>
-            </button>
-        </form>
-    </nav>
-    <hr class="hr-menus" />
-</div>
-<br/>
-<div class="d-flex flex-row-reverse">
-    <MudButton Variant="Variant.Filled" OnClick="() => NovoAgendamentoAtendimento()" Color="Color.Primary">Novo Agendamento</MudButton>
-</div>
-<div class="text-center">
-    <div class="al-tc-lc-index col-sm-10" style="background-color:#ECECEC;">
-        <div style="padding:25px;">
-            <div class="d-flex flex-row">
-                <button class="btn btn-success c-b-green" type="submit">Próximas Atividades</button>
-            </div>
-            <br/>
-            <form>
-                <div class="row">
-                    @if(Appointments is not null && Appointments.Count > 0)
-                    {
-                        @foreach(var i in Appointments)
-                        {
-                            <div class="col-sm-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        @i.Date
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="card-text">
-                                            <span class="material-icons">
-                                                account_circle
-                                            </span>@i.ClientPet.Client.Name - <span class="material-icons">
-                                                pets
-                                            </span> @i.ClientPet.Pet.Name
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        }                        
-                    }
-                </div>
-            </form>
-            <br />
-        </div>
-    </div>
-</div>
+<MudGrid Justify="Justify.Center">
+    <MudItem>
+        <MudPaper>
+            <MudTextField @bind-Value="username" Label="Usuário" Variant="Variant.Outlined"></MudTextField>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+<MudGrid Justify="Justify.Center">
+    <MudItem>
+        <MudPaper>
+            <MudTextField @bind-Value="password" Label="Senha" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" />
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+<MudGrid Justify="Justify.Center">
+    <MudItem>
+        <MudPaper>
+            <MudButton OnClick="ValidateLogin" Variant="Variant.Filled" Size="Size.Large" Color="Color.Tertiary">Entrar</MudButton>
+        </MudPaper>
+    </MudItem>
+</MudGrid>

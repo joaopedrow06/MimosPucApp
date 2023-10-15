@@ -83,6 +83,30 @@ namespace WebApi.Services.Services
             }
             return ServiceResponse;
         }
+        public async Task<ServiceResponse<Users>> ValidateUser(Users User)
+        {
+            var ServiceResponse = new ServiceResponse<Users>();
+
+            try
+            {
+
+                var newUser = _context.Users.Where(u => u.Name == User.Name && u.Password == User.Password);
+                if(newUser is null)
+                {
+                    ServiceResponse.Success = false;
+                    ServiceResponse.Message = "Usuário ou senha inválidos.";
+                }
+                ServiceResponse.Message = "Login realizado com sucesso.";
+            }
+            catch (Exception ex)
+            {
+                ServiceResponse.Success = false;
+                ServiceResponse.Message = ex.Message;
+                throw;
+            }
+            return ServiceResponse;
+        }
+
         //public async Task<ServiceResponse<Users>> UpdateRequest(Users User)
         //{
         //    var ServiceResponse = new ServiceResponse<Users>();

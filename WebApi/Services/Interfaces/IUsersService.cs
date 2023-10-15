@@ -7,5 +7,7 @@
         Task<ServiceResponse<Users>> DeleteRequest(long UserId);
         Task<ServiceResponse<List<Users>>> GetAll();
         Task<ServiceResponse<Users>> GetById(long UserId);
+        Task<ServiceResponse<Users>> ValidateUser(Users User);
+
     }
 }

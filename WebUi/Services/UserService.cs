@@ -14,7 +14,9 @@ public class UsersService
     public UsersService(HttpClient httpUser)
     {
         _httpClient = httpUser;
-        apiUri = "https://deploy-api-mimos.azurewebsites.net/api/Users";
+        //var api = "https://localhost:7019/";
+        var api = "https://deploy-api-mimos.azurewebsites.net/";
+        apiUri = $"{api}api/Users";
     }
 
     public async Task<ServiceResponse<List<Users>>> GetAll()
@@ -34,6 +36,10 @@ public class UsersService
     public async Task<HttpResponseMessage> SaveUser(Users User)
     {
         return await _httpClient.PostAsJsonAsync(apiUri, User);
+    }
+    public async Task<HttpResponseMessage> ValidateUser(Users User)
+    {
+        return await _httpClient.PostAsJsonAsync($"{apiUri}/validateUser", User);
     }
     public async Task<HttpResponseMessage> EditUser(long UserId, Users User)
     {

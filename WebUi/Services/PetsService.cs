@@ -14,7 +14,9 @@ public class PetsService
     public PetsService(HttpClient httpPet)
     {
         _httpClient = httpPet;
-        apiUri = "https://deploy-api-mimos.azurewebsites.net/api/Pets";
+        //var api = "https://localhost:7019/";
+        var api = "https://deploy-api-mimos.azurewebsites.net/";
+        apiUri = $"{api}api/Pets";
     }
 
     public async Task<ServiceResponse<List<Pets>>> GetAll()

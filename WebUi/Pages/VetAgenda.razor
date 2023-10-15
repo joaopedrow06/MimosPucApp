@@ -1,5 +1,5 @@
 ﻿@page "/Agendaveterinaria"
-
+@using MudBlazor
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
@@ -53,7 +53,7 @@
 </div>
 <br />
 <div class="d-flex flex-row-reverse">
-    <button class="btn btn-success c-b-green" type="submit">Novo Agendamento</button>
+    <MudButton Variant="Variant.Filled" OnClick="() => NovoAgendamentoAtendimento()" Color="Color.Primary">Novo Agendamento</MudButton>
 </div>
 <div class="text-center">
     <div class="al-tc-lc-index col-sm-10" style="background-color:#ECECEC;">

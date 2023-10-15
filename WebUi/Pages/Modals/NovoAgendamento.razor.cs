@@ -55,6 +55,7 @@ namespace WebUi.Pages.Modals
                 { "Text", message },
                 { "Color", Color.Primary }
                 });
+            MudDialog.Close();
         }
         private async Task HandleClientChanged(Clients client)
         {

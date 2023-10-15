@@ -37,7 +37,7 @@ public partial class ClientsDetails
     }
     private void GoHome()
     {
-        UriHelper.NavigateTo("/");
+        UriHelper.NavigateTo("/home");
     }
     private void DetalhesPet(long clientId)
     {

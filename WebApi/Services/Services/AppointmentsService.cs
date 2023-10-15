@@ -311,7 +311,7 @@ namespace WebApi.Services.Services
             var Response = new ServiceResponse<List<TransactionHistories>>();
             try
             {
-                var appointments =  await _context.Appointments!.Where(z => !z.AppointmentIsComplete).ToListAsync();
+                var appointments =  await _context.Appointments!.Where(z => !z.AppointmentIsComplete && z.Date < DateTime.Now).ToListAsync();
                 foreach(var q in appointments)
                 {
                     q.AppointmentIsComplete = true;
