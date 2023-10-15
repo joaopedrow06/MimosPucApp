@@ -23,6 +23,10 @@ public partial class Index
         }
         StateHasChanged();
     }
+    private void GoHome()
+    {
+        UriHelper.NavigateTo("/");
+    }
     private void Submit()
     {
         UriHelper.NavigateTo("/Agendapetshop");

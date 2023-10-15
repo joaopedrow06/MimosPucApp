@@ -11,11 +11,15 @@ namespace Models.Models
     {
         public long Id { get; set; }
         public long ClientId { get; set; }
-        public Clients Client { get; set; } = default!;
         public long PetId { get; set; }
-        public Pets Pet { get; set; } = default!;
 
         [NotMapped]
         public List<Pets> Pets { get; set; } = new();
+        [NotMapped]
+        public Clients Client { get; set; } = default!;
+
+        [NotMapped]
+        public Pets Pet { get; set; } = default!;
+
     }
 }

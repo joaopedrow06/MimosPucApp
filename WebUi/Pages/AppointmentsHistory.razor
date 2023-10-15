@@ -3,7 +3,7 @@
 <div>
     <nav>
         <form class="form-inline">
-            <button type="submit" class="btn btn-success bu-defaul c-b-green">
+            <button onclick="@GoHome" type="submit" class="btn btn-success bu-defaul c-b-green">
                 <span class="material-icons">
                     home
                 </span>
@@ -73,7 +73,7 @@
         <MudTd>
             <MudMenu Icon="@MudBlazor.Icons.Material.Outlined.MoreVert" TransformOrigin="Origin.CenterLeft" AnchorOrigin="Origin.CenterLeft">
                 <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined" VerticalAlign="true">
-                    <MudButton Size="Size.Small" OnClick="() => AtendimentoCancelado(context)"></MudButton>
+                    <MudButton Size="Size.Small" OnClick="() => AtendimentoCancelado(context)">Cancelar</MudButton>
                 </MudButtonGroup>
             </MudMenu>
         </MudTd>
@@ -88,3 +88,12 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
+<MudMessageBox @ref="Mbox" CancelText="Cancel">
+    <MessageContent>
+        <MudIcon Style="position: relative; left: 80px" Size="Size.Large" Icon="@MudBlazor.Icons.Material.Filled.Delete"></MudIcon>
+        <MudText>Confirmar o Cancelamento do apontamento ?</MudText>
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Default" Size="Size.Large">CONFIRM</MudButton>
+    </YesButton>
+</MudMessageBox>

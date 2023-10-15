@@ -1,5 +1,7 @@
 ﻿public class AppDbContext : DbContext
 {
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
     private static bool _created = false;
     //public DbSet<AppointmentNames>? AppointmentNames { get; set; }
     public DbSet<Appointments>? Appointments { get; set; }
@@ -13,18 +15,18 @@
     //public DbSet<Vaccines>? Vaccines { get; set; }
     //public DbSet<VaccinesHistories>? VaccinesHistories { get; set; }
 
-    public AppDbContext()
-    {
-        if (!_created)
-        {
-            _created = true;
-            //Database.EnsureDeleted();
-            Database.EnsureCreated();
-        }
-    }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlite(connectionString:"DataSource=app.db;Cache=Shared");
-    }
+    //public AppDbContext()
+    //{
+    //    if (!_created)
+    //    {
+    //        _created = true;
+    //        //Database.EnsureDeleted();
+    //        Database.EnsureCreated();
+    //    }
+    //}
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //{
+    //    optionsBuilder.UseMySql(connectionString:"DataSource=app.db;Cache=Shared");
+    //}
 
 }

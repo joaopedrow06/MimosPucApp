@@ -1,4 +1,6 @@
-﻿namespace WebUi.Pages;
+﻿using Models.Models;
+
+namespace WebUi.Pages;
 
 public partial class AppointmentsHistory
 {
@@ -10,6 +12,7 @@ public partial class AppointmentsHistory
     public List<TransactionHistories> Histories { get; set; } = default!;
     private IEnumerable<TransactionHistories> pagedData = default!;
     private MudTable<TransactionHistories> table = new();
+    MudMessageBox Mbox { get; set; } = new();
 
     private int totalItems;
     private string searchString = default!;
@@ -62,12 +65,24 @@ public partial class AppointmentsHistory
         return new TableData<TransactionHistories>() { TotalItems = totalItems, Items = pagedData };
     }
 
-    private void AtendimentoCancelado(TransactionHistories transactionHistories)
+    private async void AtendimentoCancelado(TransactionHistories transactionHistories)
     {
-        if (transactionHistories == null) return;
-        transactionHistories.WasCanceled = true;
+        bool? result = await Mbox.Show();
+        if (result != null)
+        {
+            var response = await AppointmentsService.UpdateStatus(transactionHistories.AppointmentId);
+            if (!response.Success)
+            {
+                StateHasChanged();
+                return;
+            }
+            await table.ReloadServerData();
+        }
     }
-
+    private void GoHome()
+    {
+        UriHelper.NavigateTo("/");
+    }
     private void OnSearch(string text)
     {
         searchString = text;

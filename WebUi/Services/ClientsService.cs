@@ -12,7 +12,7 @@ public class ClientsService
     public ClientsService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        apiUri = "https://localhost:7019/api/Clients";
+        apiUri = "https://deploy-api-mimos.azurewebsites.net/api/Clients";
     }
 
     public async Task<ServiceResponse<List<Clients>>> GetAll()

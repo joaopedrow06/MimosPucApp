@@ -18,12 +18,19 @@ namespace WebApi.Services.Services
             {
                 try
                 {
+                    var ExistsAppointment = Exists(Appointment);
+                    if (ExistsAppointment)
+                    {
+                        ServiceResponse.Success = false;
+                        ServiceResponse.Message = "Já existe um apontamente em aberto para esse cliente e este tipo de serviço.";
+                        return ServiceResponse;
+                    }
                     var newClientPet = new Appointments
                     {
                         ClientPetId = Appointment.ClientPetId,
                         AppointmentName = Appointment.AppointmentName,
                         Date = Appointment.Date,
-                        AppointmentIsComplete = Appointment.AppointmentIsComplete,
+                        AppointmentIsComplete = false,
                     };
                     _context.Appointments.Add(newClientPet);
                     await _context.SaveChangesAsync();
@@ -91,8 +98,15 @@ namespace WebApi.Services.Services
             var ServiceResponse = new ServiceResponse<List<Appointments>>();
             try
             {
-                ServiceResponse.Data = await _context.Appointments!.Include(q => q.ClientPet.Client)
-                .Include(q => q.ClientPet.Pet).ToListAsync();
+                var appointments = await _context.Appointments!.ToListAsync();
+                foreach(var q in appointments)
+                {
+                    q.ClientPet = _context.ClientsPets.Where(z => z.Id == q.ClientPetId).FirstOrDefault();
+                    q.ClientPet.Client = _context.Clients.Where(z => z.Id == q.ClientPet.ClientId).FirstOrDefault();
+                    q.ClientPet.Pet = _context.Pets.Where(z => z.Id == q.ClientPet.PetId).FirstOrDefault();
+                }
+
+                ServiceResponse.Data = appointments;
                 ServiceResponse.Message = "Sucesso.";
             }
             catch (Exception ex)
@@ -107,10 +121,16 @@ namespace WebApi.Services.Services
             var ServiceResponse = new ServiceResponse<List<Appointments>>();
             try
             {
-                ServiceResponse.Data = await _context.Appointments!.Include(q => q.ClientPet.Client)
-                .Include(q => q.ClientPet.Pet)
-                .Where(z => z.Date >= DateTime.Now)
-                .ToListAsync();
+                await UpdateAppointments();
+                var appointments = await _context.Appointments!.ToListAsync();
+                foreach (var q in appointments)
+                {
+                    q.ClientPet = _context.ClientsPets.Where(z => z.Id == q.ClientPetId).FirstOrDefault();
+                    q.ClientPet.Client = _context.Clients.Where(z => z.Id == q.ClientPet.ClientId).FirstOrDefault();
+                    q.ClientPet.Pet = _context.Pets.Where(z => z.Id == q.ClientPet.PetId).FirstOrDefault();
+                }
+                ServiceResponse.Data = appointments
+                .Where(z => z.Date >= DateTime.Now).ToList();
                 ServiceResponse.Message = "Sucesso.";
             }
             catch (Exception ex)
@@ -211,7 +231,16 @@ namespace WebApi.Services.Services
             var Response = new ServiceResponse<List<TransactionHistories>>();
             try
             {
-                Response.Data = await _context.TransactionHistories!.Include(z => z.Appointment).Include(q => q.Appointment.ClientPet.Client).Include(q => q.Appointment.ClientPet.Pet).ToListAsync();
+                await UpdateAppointments();
+                var Transactions = await _context.TransactionHistories!.ToListAsync();
+                foreach(var i in Transactions)
+                {
+                    i.Appointment = _context.Appointments.Where(z => z.Id == i.AppointmentId).FirstOrDefault();
+                    i.Appointment.ClientPet = _context.ClientsPets.Where(z => z.Id == i.Appointment.ClientPetId).FirstOrDefault();
+                    i.Appointment.ClientPet.Client = _context.Clients.Where(z => z.Id == i.Appointment.ClientPet.ClientId).FirstOrDefault();
+                    i.Appointment.ClientPet.Pet = _context.Pets.Where(z => z.Id == i.Appointment.ClientPet.PetId).FirstOrDefault();
+                }
+                Response.Data = Transactions;
                 Response.Message = "Sucesso.";
             }
             catch (Exception ex)
@@ -226,9 +255,24 @@ namespace WebApi.Services.Services
             var Response = new ServiceResponse<List<TransactionHistories>>();
             try
             {
-                Response.Data = await _context.TransactionHistories!.Include(z => z.Appointment).Include(q => q.Appointment.ClientPet.Client).Include(q => q.Appointment.ClientPet.Pet)
-                .Where(q => q.Appointment.ClientPet.ClientId == clientId).ToListAsync();
-                Response.Message = "Sucesso.";
+                var ClientPet = await _context.ClientsPets.Where(z => z.ClientId == clientId).ToListAsync();
+                if(ClientPet is not null)
+                {
+                    var Appointments = await _context.Appointments.Where(z => ClientPet.Select(z => z.Id).Contains(z.ClientPetId)).Select(x => x.Id).ToListAsync();
+                    if(Appointments is not null)
+                    {
+                        var Transactions = await _context.TransactionHistories!.Where(q => Appointments.Contains(q.AppointmentId)).ToListAsync();
+                        foreach (var i in Transactions)
+                        {
+                            i.Appointment = _context.Appointments.Where(z => z.Id == i.AppointmentId).FirstOrDefault();
+                            i.Appointment.ClientPet = _context.ClientsPets.Where(z => z.Id == i.Appointment.ClientPetId).FirstOrDefault();
+                            i.Appointment.ClientPet.Client = _context.Clients.Where(z => z.Id == i.Appointment.ClientPet.ClientId).FirstOrDefault();
+                            i.Appointment.ClientPet.Pet = _context.Pets.Where(z => z.Id == i.Appointment.ClientPet.PetId).FirstOrDefault();
+                        }
+                        Response.Data = Transactions;
+                        Response.Message = "Sucesso.";
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -243,7 +287,16 @@ namespace WebApi.Services.Services
             var Response = new ServiceResponse<List<TransactionHistories>>();
             try
             {
-                Response.Data = await _context.TransactionHistories!.Include(z => z.Appointment).Include(q => q.Appointment.ClientPet.Client).Include(q => q.Appointment.ClientPet.Pet).Where(q => q.Appointment.AppointmentNameEnumString == Models.Enums.AppointmentNames.VET.ToString()).ToListAsync();
+                await UpdateAppointments();
+                var Transactions = await _context.TransactionHistories!.ToListAsync();
+                foreach (var i in Transactions)
+                {
+                    i.Appointment = _context.Appointments.Where(z => z.Id == i.AppointmentId).FirstOrDefault();
+                    i.Appointment.ClientPet = _context.ClientsPets.Where(z => z.Id == i.Appointment.ClientPetId).FirstOrDefault();
+                    i.Appointment.ClientPet.Client = _context.Clients.Where(z => z.Id == i.Appointment.ClientPet.ClientId).FirstOrDefault();
+                    i.Appointment.ClientPet.Pet = _context.Pets.Where(z => z.Id == i.Appointment.ClientPet.PetId).FirstOrDefault();
+                }
+                Response.Data = Transactions;
                 Response.Message = "Sucesso.";
             }
             catch (Exception ex)
@@ -280,70 +333,51 @@ namespace WebApi.Services.Services
             }
             return Response;
         }
-        public async Task<ServiceResponse<Appointments>> AppointmentCanceled(Appointments Appointment)
+        public async Task<ServiceResponse<Appointments>> AppointmentCanceled(long AppointmentId)
         {
             var ServiceResponse = new ServiceResponse<Appointments>();
 
-            var valid = isValid(Appointment);
-            if (valid)
+            try
             {
-                try
+                var AppointmentDetails = await _context.Appointments.Where(q => q.Id == AppointmentId).FirstOrDefaultAsync();
+                if(AppointmentDetails is not null)
                 {
-                    if (Appointment.WasCanceled)
+                    var q = await _context.TransactionHistories!.Where(q => q.AppointmentId == AppointmentId).FirstOrDefaultAsync();
+                    if (q is null)
                     {
-                        var q = await _context.TransactionHistories!.Where(q => q.AppointmentId == Appointment.Id).FirstOrDefaultAsync();
-                        if (q is null)
+                        var Transaction = new TransactionHistories()
                         {
-                            var Transaction = new TransactionHistories()
-                            {
-                                TransactionDate = Appointment.Date,
-                                AppointmentId = Appointment.Id,
-                                WasCanceled = Appointment.WasCanceled,
-                            };
-                            _context.TransactionHistories!.Add(Transaction);
-                            await _context.SaveChangesAsync();
-                        }
-                        else
-                        {
-                            q.WasCanceled = Appointment.WasCanceled;
-                        }
+                            TransactionDate = AppointmentDetails.Date,
+                            AppointmentId = AppointmentId,
+                            WasCanceled = true,
+                        };
+                        _context.TransactionHistories!.Add(Transaction);
+                        await _context.SaveChangesAsync();
                     }
+                    else
+                    {
+                        q.WasCanceled = true;
+                    }
+                    AppointmentDetails.AppointmentIsComplete = true;
                     await _context.SaveChangesAsync();
+                    ServiceResponse.Data = AppointmentDetails;
                     ServiceResponse.Message = "Registro atualizado com Sucesso";
-                }
-                catch (Exception ex)
-                {
-                    ServiceResponse.Success = false;
-                    ServiceResponse.Message = ex.Message;
-                    throw;
-                }
-            }
-            else
-            {
-                ServiceResponse.Success = false;
-                if (Appointment is null)
-                {
-                    ServiceResponse.Message = "Por favor, preencha todos os dados do Appointmente e tente novamente.";
                 }
                 else
                 {
-                    if (Appointment.AppointmentNameEnumString == "")
-                    {
-                        ServiceResponse.Message = "Por favor, informe um tipo de apontamento.";
-                    }
-                    if (Appointment.Date != DateTime.Now)
-                    {
-                        ServiceResponse.Message = "Por favor, informe uma data válida.";
-                    }
-                    if (Appointment.ClientPetId == 0)
-                    {
-                        ServiceResponse.Message = "Por favor, informe um cliente válido.";
-                    }
+                    ServiceResponse.Success = false;
+                    ServiceResponse.Message = "Apontamento não encontrado";
                 }
             }
+            catch (Exception ex)
+            {
+                ServiceResponse.Success = false;
+                ServiceResponse.Message = ex.Message;
+                throw;
+            }
+
             return ServiceResponse;
         }
-
         private bool isValid(Appointments Appointment)
         {
             if (Appointment == null)
@@ -355,6 +389,16 @@ namespace WebApi.Services.Services
                 return false;
             }
             return true;
+        }
+        private bool Exists(Appointments appointment)
+        {
+            var NotCompletedAppointments = _context.Appointments.Where(z => !z.AppointmentIsComplete).ToList();
+            if(NotCompletedAppointments.Any())
+            {
+                var exists = NotCompletedAppointments.Any(z => z.ClientPetId == appointment.ClientPetId && z.AppointmentName == appointment.AppointmentName);
+                return exists;
+            }
+            return false;
         }
     }
 }

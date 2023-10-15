@@ -16,6 +16,7 @@ namespace WebUi
             builder.Services.AddScoped<AppointmentsService,AppointmentsService>();
             builder.Services.AddScoped<ClientsService, ClientsService>();
             builder.Services.AddScoped<PetsService, PetsService>();
+            builder.Services.AddScoped<UsersService, UsersService>();
             builder.Services.AddMudServices();
             await builder.Build().RunAsync();
 

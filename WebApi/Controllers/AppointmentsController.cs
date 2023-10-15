@@ -129,5 +129,29 @@ public class AppointmentsController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
+    [HttpGet("UpdateStates")]
+    public async Task<ActionResult<IEnumerable<Appointments>>> UpdateStates()
+    {
+        try
+        {
+            return Ok(await _AppointmentsService.UpdateAppointments());
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+    [HttpGet("AppointmentCanceled/{id:long:min(1)}")]
+    public async Task<ActionResult<IEnumerable<Appointments>>> UpdateByAppointmentId([FromRoute] long id)
+    {
+        try
+        {
+            return Ok(await _AppointmentsService.AppointmentCanceled(id));
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
 }
 

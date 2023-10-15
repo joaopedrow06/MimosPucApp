@@ -14,7 +14,7 @@ public class UsersService
     public UsersService(HttpClient httpUser)
     {
         _httpClient = httpUser;
-        apiUri = "https://localhost:7019/api/Users";
+        apiUri = "https://deploy-api-mimos.azurewebsites.net/api/Users";
     }
 
     public async Task<ServiceResponse<List<Users>>> GetAll()

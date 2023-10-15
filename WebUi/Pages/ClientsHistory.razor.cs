@@ -57,6 +57,10 @@ public partial class ClientsHistory
     {
         UriHelper.NavigateTo($"ClientHistory/ClientDetails/{client.Client.Id}");
     }
+    private void GoHome()
+    {
+        UriHelper.NavigateTo("/");
+    }
     private void Submit()
     {
         UriHelper.NavigateTo("/Agendapetshop");

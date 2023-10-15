@@ -12,6 +12,6 @@
         Task<ServiceResponse<List<TransactionHistories>>> GetAppointmentsPetShopHistories();
         Task<ServiceResponse<List<TransactionHistories>>> GetHistoryByClientId(long clientId);
         Task<ServiceResponse<List<TransactionHistories>>> UpdateAppointments();
-        Task<ServiceResponse<Appointments>> AppointmentCanceled(Appointments Appointment);
+        Task<ServiceResponse<Appointments>> AppointmentCanceled(long Appoinment);
     }
 }

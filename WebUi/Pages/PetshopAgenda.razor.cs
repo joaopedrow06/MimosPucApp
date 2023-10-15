@@ -2,7 +2,7 @@
 
 namespace WebUi.Pages;
 
-public partial class VetAgenda
+public partial class PetShopAgenda
 {
     [Inject]
     private AppointmentsService AppointmentsService { get; set; } = default!;
@@ -23,6 +23,10 @@ public partial class VetAgenda
             Appointments3 = Response.Data!.Where(q => q.Date.ToShortDateString() == DateTime.Now.AddDays(2).ToShortDateString()).ToList() ;
         }
         StateHasChanged();
+    }
+    private void GoHome()
+    {
+        UriHelper.NavigateTo("/");
     }
     private void Submit()
     {

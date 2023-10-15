@@ -13,10 +13,12 @@ namespace WebApi.Services.Services
             var serviceResponse = new ServiceResponse<List<Pets>>();
             try
             {
-                var response = await _context.ClientsPets.Include(z => z.Pet).Where(q => q.ClientId == clientId).ToListAsync();
-                if(response is not null)
+                var ClientsPets = await _context.ClientsPets.Where(q => q.ClientId == clientId).Select(z => z.PetId).ToListAsync();
+                var pets = await _context.Pets.Where(z => ClientsPets.Contains(z.Id)).ToListAsync();
+                var response = pets;
+                if (response is not null)
                 {
-                    serviceResponse.Data = response.Select(q => q.Pet).ToList();
+                    serviceResponse.Data = response;
                     serviceResponse.Message = "Sucesso";
                 }
                 else
@@ -214,9 +216,17 @@ namespace WebApi.Services.Services
         }
         private bool Exists(Pets Pet)
         {
-            var Exists = _context.ClientsPets.Any(q => (q.PetId == Pet.Id && q.ClientId == Pet.ClientId && q.Pet.Name == Pet.Name)
-            || (q.ClientId == Pet.ClientId && q.Pet.Name == Pet.Name));
-            return Exists;
+            var PetsDoCliente = _context.ClientsPets.Where(q => q.ClientId == Pet.ClientId);
+            if (PetsDoCliente.Any())
+            {
+                var NomesPetsExistentes = _context.Pets.Where(q => PetsDoCliente.Select(z => z.PetId).Contains(q.Id)).ToList();
+                if(NomesPetsExistentes.Any())
+                {
+                    return NomesPetsExistentes.Any(z => z.Name == Pet.Name);
+                }
+            }
+            return false;
+
         }
 
     }

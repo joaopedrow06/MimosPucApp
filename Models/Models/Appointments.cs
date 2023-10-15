@@ -13,7 +13,6 @@ namespace Models.Models
     {
         public long Id { get; set; }
         public long ClientPetId { get; set; }
-        public ClientsPets ClientPet { get; set; } = default!;
         public DateTime Date { get; set; } = default!;
         public bool AppointmentIsComplete { get; set; } = default!;
         [Column("AppointmentName")]
@@ -26,5 +25,8 @@ namespace Models.Models
         public AppointmentNames AppointmentName { get; set; } = 0;
         [NotMapped]
         public bool WasCanceled { get; set; } = default!;
+        [NotMapped]
+        public ClientsPets ClientPet { get; set; } = default!;
+
     }
 }

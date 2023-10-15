@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using WebApi.Services.Services;
 
 namespace WebApi
@@ -7,13 +8,16 @@ namespace WebApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var connectionstring = builder.Configuration.GetConnectionString("Default");
 
             // Add services to the container.
             builder.Services.AddHttpClient();
-            builder.Services.AddDbContext<AppDbContext>();
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionstring, ServerVersion.AutoDetect(connectionstring)));
+            //builder.Services.AddDbContext<AppDbContext>();
             builder.Services.AddScoped<IClientsService,ClientsService>();
             builder.Services.AddScoped<IPetsService,PetsService>();
             builder.Services.AddScoped<IAppointmentsService,AppointmentsService>();
+            builder.Services.AddScoped<IUsersService,UsersService>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

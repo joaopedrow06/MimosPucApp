@@ -35,6 +35,10 @@ public partial class ClientsDetails
         totalItems = data.Count();
         return new TableData<ClientsPets>() { TotalItems = 1, Items = data };
     }
+    private void GoHome()
+    {
+        UriHelper.NavigateTo("/");
+    }
     private void DetalhesPet(long clientId)
     {
         UriHelper.NavigateTo($"/ClientHistory/ClientDetails/PetDetailsByClient/{clientId}");

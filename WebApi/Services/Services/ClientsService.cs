@@ -7,7 +7,7 @@ namespace WebApi.Services.Services
     public class ClientsService : IClientsService
     {
         private readonly AppDbContext _context;
-        public ClientsService(AppDbContext context) {  _context = context; }
+        public ClientsService(AppDbContext context) { _context = context; }
 
         public async Task<ServiceResponse<ClientsPets>> CreateRelationshiopClientPet(long clientId, long petId)
         {
@@ -37,10 +37,17 @@ namespace WebApi.Services.Services
             var ServiceResponse = new ServiceResponse<Clients>();
 
             var valid = isValid(client);
-            if(valid)
+            if (valid)
             {
                 try
                 {
+                    var existsClient = Exists(client);
+                    if (existsClient)
+                    {
+                        ServiceResponse.Success = false;
+                        ServiceResponse.Message = "Um cliente com esses mesmos dados já existe.";
+                        return ServiceResponse;
+                    }
                     _context.Clients.Add(client);
                     await _context.SaveChangesAsync();
                     ServiceResponse.Message = "Registro Criado com Sucesso";
@@ -55,13 +62,13 @@ namespace WebApi.Services.Services
             else
             {
                 ServiceResponse.Success = false;
-                if(client is null)
+                if (client is null)
                 {
                     ServiceResponse.Message = "Por favor, preencha todos os dados do cliente e tente novamente.";
                 }
                 else
                 {
-                    if(client.Name == "")
+                    if (client.Name == "")
                     {
                         ServiceResponse.Message = "Por favor, informe um nome.";
                     }
@@ -84,7 +91,7 @@ namespace WebApi.Services.Services
             try
             {
                 Clients? client = await _context.Clients!.FirstOrDefaultAsync(z => z.Id == clientId);
-                if(client is not null)
+                if (client is not null)
                 {
                     _context.Remove(client);
                     await _context.SaveChangesAsync();
@@ -96,7 +103,7 @@ namespace WebApi.Services.Services
                     ServiceResponse.Message = "Cliente informado não é um cliente válido, por favor tente novamente.";
                 }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 ServiceResponse.Success = false;
                 ServiceResponse.Message = ex.Message;
@@ -124,22 +131,7 @@ namespace WebApi.Services.Services
             var ServiceResponse = new ServiceResponse<Clients>();
             try
             {
-                ServiceResponse.Data =  await _context.Clients!.FirstOrDefaultAsync(q => q.Id == clientId);
-                ServiceResponse.Message = "Sucesso.";
-            }
-            catch (Exception ex)
-            {
-                ServiceResponse.Success = false;
-                ServiceResponse.Message = ex.Message;
-            }
-            return ServiceResponse;
-        }
-        public async Task<ServiceResponse<ClientsPets>> GetClientPetByClientAndPetId(long clientId,long petId)
-        {
-            var ServiceResponse = new ServiceResponse<ClientsPets>();
-            try
-            {
-                ServiceResponse.Data = await _context.ClientsPets!.Include(z => z.Client).Include(z => z.Pet).FirstOrDefaultAsync(q => q.ClientId == clientId && q.PetId == petId);
+                ServiceResponse.Data = await _context.Clients!.FirstOrDefaultAsync(q => q.Id == clientId);
                 ServiceResponse.Message = "Sucesso.";
             }
             catch (Exception ex)
@@ -159,7 +151,7 @@ namespace WebApi.Services.Services
                 try
                 {
                     var context = await _context.Clients!.FirstOrDefaultAsync(q => q.Id.Equals(client.Id));
-                    if(context is not null)
+                    if (context is not null)
                     {
                         context.Name = client.Name;
                         context.Email = client.Email;
@@ -209,6 +201,30 @@ namespace WebApi.Services.Services
             }
             return ServiceResponse;
         }
+
+        public async Task<ServiceResponse<ClientsPets>> GetClientPetByClientAndPetId(long clientId, long petId)
+        {
+            var ServiceResponse = new ServiceResponse<ClientsPets>();
+            try
+            {
+                var ClientPet = new ClientsPets();
+                ClientPet = await _context.ClientsPets.Where(q => q.ClientId == clientId && q.PetId == petId).FirstOrDefaultAsync();
+                if (ClientPet is not null)
+                {
+                    ClientPet.Pet = await _context.Pets.FirstOrDefaultAsync(q => q.Id == petId);
+                    ClientPet.Client = await _context.Clients.FirstOrDefaultAsync(q => q.Id == clientId);
+                }
+
+                ServiceResponse.Data = ClientPet;
+                ServiceResponse.Message = "Sucesso.";
+            }
+            catch (Exception ex)
+            {
+                ServiceResponse.Success = false;
+                ServiceResponse.Message = ex.Message;
+            }
+            return ServiceResponse;
+        }
         public async Task<ServiceResponse<List<ClientsPets>>> GetAllClientsPetsGroupByClient()
         {
             var ServiceResponse = new ServiceResponse<List<ClientsPets>>();
@@ -219,16 +235,18 @@ namespace WebApi.Services.Services
 
                 var ClientsPetsGroupedByClientId = new List<ClientsPets>();
 
-                if(data is not null)
+                if (data is not null)
                 {
                     foreach (var client in data.DistinctBy(q => q.Id))
                     {
-                        var GroupPets = _context!.ClientsPets!.Include(p => p.Pet).Where(z => z.ClientId == client.Id).Select(z => z.Pet).ToList();
+                        var GroupPets = _context!.ClientsPets!.Where(z => z.ClientId == client.Id).Select(z => z.PetId).ToList();
+
+                        var Pets = await _context.Pets.Where(q => GroupPets.Contains(q.Id)).ToListAsync();
 
                         var ClientPet = new ClientsPets
                         {
                             Client = client,
-                            Pets = GroupPets
+                            Pets = Pets
                         };
                         ClientsPetsGroupedByClientId.Add(ClientPet);
                     }
@@ -256,10 +274,13 @@ namespace WebApi.Services.Services
                     data.Client = client;
                     try
                     {
-                        var clientPets = await _context.ClientsPets!.Where(z => z.ClientId == clientId).Include(z => z.Pet).Select(z => z.Pet).ToListAsync();
-                        if (clientPets is not null)
+                        var GroupPets = _context!.ClientsPets!.Where(z => z.ClientId == client.Id).Select(z => z.PetId).ToList();
+
+                        var Pets = await _context.Pets.Where(q => GroupPets.Contains(q.Id)).ToListAsync();
+
+                        if (Pets is not null)
                         {
-                            data.Pets = clientPets;
+                            data.Pets = Pets;
                         }
                     }
                     catch (Exception ex)
@@ -284,12 +305,24 @@ namespace WebApi.Services.Services
             {
                 return false;
             }
-            if (client.Name ==  "" || client.Email == "" || client.CellPhone == ""
-            || client.CEP ==  "" || client.Adress == "" || client.HouseNumber == "")
+            if (client.Name == "" || client.Email == "" || client.CellPhone == ""
+            || client.CEP == "" || client.Adress == "" || client.HouseNumber == "")
             {
                 return false;
             }
             return true;
+        }
+        private bool Exists(Clients client)
+        {
+            var Clients = _context.Clients.ToList();
+            if(Clients.Any())
+            {
+                var existsClient = Clients.Where(q => q.Name == client.Name && q.CellPhone == client.CellPhone
+                && q.Email == client.Email && q.CEP == client.CEP && q.Adress == client.Adress && q.HouseNumber == client.HouseNumber)
+                .ToList();
+                return existsClient.Any();
+            }
+            return false;
         }
     }
 }

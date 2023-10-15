@@ -12,7 +12,7 @@ public class AppointmentsService
     public AppointmentsService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        apiUri = "https://localhost:7019/api/Appointments";
+        apiUri = "https://deploy-api-mimos.azurewebsites.net/api/Appointments";
     }
 
     public async Task<ServiceResponse<List<Appointments>>> GetAll()
@@ -70,6 +70,21 @@ public class AppointmentsService
         {
             var route = $"{apiUri}/GetHistoryByClientId/{ClientId}";
             response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<TransactionHistories>>>(route);
+        }
+        catch (Exception ex)
+        {
+            response!.Success = false;
+            response!.Message = ex.Message;
+        }
+        return response!;
+    }
+    public async Task<ServiceResponse<List<Appointments>>> UpdateStatus(long AppointmentId)
+    {
+        ServiceResponse<List<Appointments>>? response = new();
+        try
+        {
+            var route = $"{apiUri}/AppointmentCanceled/{AppointmentId}";
+            response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<Appointments>>>(route);
         }
         catch (Exception ex)
         {

@@ -1,0 +1,23 @@
+﻿@page "/home"
+@using MudBlazor
+<div class="text-center">
+    <div class="al-tc-lc" style="background-color:#ECECEC;">
+        <div style="padding:25px;">
+            <form>
+                <br />
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        <MudTextField @bind-Value="username" Label="Usuário" Variant="Variant.Outlined"></MudTextField>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group">
+                    <MudTextField @bind-Value="password" Label="Senha" Variant="Variant.Outlined"></MudTextField>
+                </div>
+                <br />
+                <button type="submit" class="btn btn-success  c-b-green">Entrar</button>
+            </form>
+            <br />
+        </div>
+    </div>
+</div>

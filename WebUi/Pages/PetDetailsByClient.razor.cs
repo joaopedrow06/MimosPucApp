@@ -40,6 +40,10 @@ public partial class PetDetailsByClient
         totalItems = data.Count();
         return new TableData<Pets>() { TotalItems = 1, Items = data };
     }
+    private void GoHome()
+    {
+        UriHelper.NavigateTo("/");
+    }
     private void Submit()
     {
         UriHelper.NavigateTo("/Agendapetshop");
