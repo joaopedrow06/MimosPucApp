@@ -68,7 +68,7 @@
       "Microsoft.Win32.Primitives.dll": "sha256-yboFJnwtZ2SBWHg3J8KnC41LijHjMeYL1Yx5iAhdNAg=",
       "Microsoft.Win32.Registry.dll": "sha256-1q8Tp5QVk+YMwQdwuegpttSRCJ\/y\/JJSEMbPxnwhex4=",
       "Models.dll": "sha256-TEckOxJGR\/2JQZSaQR3P+IYSICTvq9E1Svx1zrSHvWI=",
-      "MudBlazor.dll": "sha256-uMpuUZYogGbCK3meHqOAcTTmmvYJ2eimUXQO2qHSqJk=",
+      "MudBlazor.dll": "sha256-FQHD1iC+wEfK5bjlYRQlloEOeLY1jnWLXuex3tclNrw=",
       "MySqlConnector.dll": "sha256-AxhrRwbIPfdGF5xW2Ukt0GVXrxDFf4CfeS1U2kbiuLY=",
       "netstandard.dll": "sha256-G37FC3sl1wXMrfNBlq1zW884Vjjj6khNhHZzVbvW14s=",
       "Newtonsoft.Json.dll": "sha256-IsZJ91\/OW+fHzNqIgEc7Y072ns8z9dGritiSyvR9Wgc=",
@@ -193,7 +193,7 @@
       "System.Xml.XmlSerializer.dll": "sha256-3Kh4lp5rfy6RfJSI\/7fglZw0lkrj5\/mptYSR\/VBHoas=",
       "System.Xml.XPath.dll": "sha256-J8RCflctn45yIjOiX\/BjqfBCu9+PCDmXMljXKAHz2yI=",
       "System.Xml.XPath.XDocument.dll": "sha256-0THOQ5XkAFa\/Ru9D0DPYL8uzsTT9UycEweXQxdU6Xp8=",
-      "WebUi.dll": "sha256-ki8dp5v42kDrAjUrAcxviYVA5HjzAxnf6Tl4hGz4ldE="
+      "WebUi.dll": "sha256-TkF0ic57TMmtPE+KFsyCL0Mg7B28qZBxaZ+TxUx\/+wQ="
     },
     "extensions": null,
     "lazyAssembly": null,
