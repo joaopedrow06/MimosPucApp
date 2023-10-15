@@ -1,0 +1,90 @@
+﻿@page "/HistoryPet"
+@using MudBlazor
+<div>
+    <nav>
+        <form class="form-inline">
+            <button type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    home
+                </span>
+                <div>
+                    Home
+                </div>
+            </button>
+            <button onclick="@Submit" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    calendar_month
+                </span>
+                <div>
+                    Agenda Banho
+                </div>
+            </button>
+            <button onclick="@VetHistory" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    person
+                </span>
+                <div>
+                    Agenda veterinária Veterinário
+                </div>
+            </button>
+            <button onclick="@ClientHistory" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    person
+                </span>
+                <div>
+                    Clientes
+                </div>
+            </button>
+            <button onclick="@HistoricoPets" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    history
+                </span>
+                <div>
+                    Histórico
+                </div>
+            </button>
+        </form>
+    </nav>
+    <hr class="hr-menus" />
+</div>
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<TransactionHistories>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Histórico de Atendimentos</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="id" T="TransactionHistories">Código</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="clientName" T="TransactionHistories">Nome do Cliente</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="petName" T="TransactionHistories">Nome do Pet</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="appointment" T="TransactionHistories">Apontamento</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="date" T="TransactionHistories">Data</MudTableSortLabel></MudTh>
+        <MudTh>Opções</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.Id</MudTd>
+        <MudTd DataLabel="Sign">@context.Appointment.ClientPet.Client.Name</MudTd>
+        <MudTd DataLabel="Sign">@context.Appointment.ClientPet.Pet.Name</MudTd>
+        <MudTd DataLabel="Position">@context.Appointment.AppointmentName.ToString()</MudTd>
+        <MudTd DataLabel="Molar mass">@context.TransactionDate</MudTd>
+        <MudTd>
+            <MudMenu Icon="@MudBlazor.Icons.Material.Outlined.MoreVert" TransformOrigin="Origin.CenterLeft" AnchorOrigin="Origin.CenterLeft">
+                <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined" VerticalAlign="true">
+                    <MudButton Size="Size.Small" OnClick="() => AtendimentoCancelado(context)"></MudButton>
+                </MudButtonGroup>
+            </MudMenu>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

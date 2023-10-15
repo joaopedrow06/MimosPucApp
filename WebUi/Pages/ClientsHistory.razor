@@ -1,0 +1,97 @@
+﻿@page "/ClientHistory/"
+@using MudBlazor
+<div>
+    <nav>
+        <form class="form-inline">
+            <button type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    home
+                </span>
+                <div>
+                    Home
+                </div>
+            </button>
+            <button onclick="@Submit" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    calendar_month
+                </span>
+                <div>
+                    Agenda Banho
+                </div>
+            </button>
+            <button onclick="@VetHistory" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    person
+                </span>
+                <div>
+                    Agenda veterinária Veterinário
+                </div>
+            </button>
+            <button onclick="@ClientHistory" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    person
+                </span>
+                <div>
+                    Clientes
+                </div>
+            </button>
+            <button onclick="@HistoricoPets" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    history
+                </span>
+                <div>
+                    Histórico
+                </div>
+            </button>
+        </form>
+    </nav>
+    <hr class="hr-menus" />
+</div>
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<ClientsPets>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Clientes</MudText>
+        <MudButton Variant="Variant.Filled" OnClick="() => NovoCliente()" Color="Color.Primary">Novo Cliente</MudButton>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="clientName" T="ClientsPets">Nome do Cliente</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="petName" T="ClientsPets">Pets</MudTableSortLabel></MudTh>
+        <MudTh>Detalhes</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Sign">@context.Client.Name</MudTd>
+        <MudTd>
+            <MudMenu PositionAtCursor="true" AnchorOrigin="@Origin.BottomRight" TransformOrigin="@Origin.TopLeft">
+                <ActivatorContent>
+                    <MudAvatar Size="Size.Small" Class="mudAvatar" Color="Color.Primary">@context.Pets.Select(q => q.Name).Distinct().ToList().FillCardChipIlist()</MudAvatar>
+                </ActivatorContent>
+                <ChildContent>
+                    @foreach (var item in context.Pets.Select(q => q.Name))
+                    {
+                        <MudMenuItem>@item</MudMenuItem>
+                    }
+                </ChildContent>
+            </MudMenu>
+        </MudTd>
+
+        <MudTd>
+            <button type="button" class="btn btn-success">
+                <MudButton Size="Size.Small" OnClick="() => Detalhes(context)">Detalhes</MudButton>
+            </button>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+

@@ -1,0 +1,12 @@
+﻿<h4>Novo Pet</h4>
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="PetName" Label="Nome do Pet" Variant="Variant.Text"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="() => Submit(PetName)">Ok</MudButton>
+    </DialogActions>
+</MudDialog>

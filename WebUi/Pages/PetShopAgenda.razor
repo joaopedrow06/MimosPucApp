@@ -1,0 +1,194 @@
+﻿@page "/Agendapetshop"
+
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+</head>
+<div>
+    <nav>
+        <form class="form-inline">
+            <button type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    home
+                </span>
+                <div>
+                    Home
+                </div>
+            </button>
+            <button onclick="@Submit" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    calendar_month
+                </span>
+                <div>
+                    Agenda Banho
+                </div>
+            </button>
+            <button onclick="@VetHistory" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    person
+                </span>
+                <div>
+                    Agenda veterinária Veterinário
+                </div>
+            </button>
+            <button onclick="@ClientHistory" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    person
+                </span>
+                <div>
+                    Clientes
+                </div>
+            </button>
+            <button onclick="@HistoricoPets" type="submit" class="btn btn-success bu-defaul c-b-green">
+                <span class="material-icons">
+                    history
+                </span>
+                <div>
+                    Histórico
+                </div>
+            </button>
+        </form>
+    </nav>
+    <hr class="hr-menus" />
+</div>
+<br />
+<div class="d-flex flex-row-reverse">
+    <button class="btn btn-success c-b-green" type="submit">Novo Agendamento</button>
+</div>
+<div class="text-center">
+    <div class="al-tc-lc-index col-sm-10" style="background-color:#ECECEC;">
+        <div style="padding:25px;">
+            <form>
+                <div class="row">
+                    <div class="col-sm-4">
+                        @if (Appointments1 is not null)
+                        {
+                            if (Appointments1.Count() == 0)
+                            {
+                                <div class="card" style="width: 18rem;">
+                                    Agenda - @DateTime.UtcNow.ToShortDateString()
+                                    <div class="card-body">
+                                        <p class="card-text">Nada previsto para este dia.</p>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="card" style="width: 18rem;">
+                                    Agenda - @DateTime.UtcNow.AddDays(0).ToShortDateString()
+                                    <div class="card-body">
+                                        @foreach (var i in Appointments1!.OrderBy(q => q.Date).Take(4).ToList())
+                                        {
+                                            <div class="col-sm-12">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        @i.Date
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p class="card-text">
+                                                            <span class="material-icons">
+                                                                account_circle
+                                                            </span>@i.ClientPet.Client.Name - <span class="material-icons">
+                                                                pets
+                                                            </span> @i.ClientPet.Pet.Name
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div class="col-sm-4">
+                        @if (Appointments2 is not null)
+                        {
+                            if (Appointments2.Count() == 0)
+                            {
+                                <div class="card" style="width: 18rem;">
+                                    Agenda - @DateTime.UtcNow.AddDays(1).ToShortDateString()
+                                    <div class="card-body">
+                                        <p class="card-text">Nada previsto para este dia.</p>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="card" style="width: 18rem;">
+                                    Agenda - @DateTime.UtcNow.AddDays(1).ToShortDateString()
+                                    <div class="card-body">
+                                        @foreach (var i in Appointments2!.OrderBy(q => q.Date).Take(4).ToList())
+                                        {
+                                            <div class="col-sm-12">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        @i.Date
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p class="card-text">
+                                                            <span class="material-icons">
+                                                                account_circle
+                                                            </span>@i.ClientPet.Client.Name - <span class="material-icons">
+                                                                pets
+                                                            </span> @i.ClientPet.Pet.Name
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div class="col-sm-4">
+                        @if (Appointments3 is not null)
+                        {
+                            if (Appointments3.Count() == 0)
+                            {
+                                <div class="card" style="width: 18rem;">
+                                    Agenda - @DateTime.UtcNow.AddDays(2).ToShortDateString()
+                                    <div class="card-body">
+                                        <p class="card-text">Nada previsto para este dia.</p>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="card" style="width: 18rem;">
+                                    Agenda - @DateTime.UtcNow.AddDays(2).ToShortDateString()
+                                    <div class="card-body">
+                                        @foreach (var i in Appointments3!.OrderBy(q => q.Date).Take(4).ToList())
+                                        {
+                                            <div class="col-sm-12">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        @i.Date
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p class="card-text">
+                                                            <span class="material-icons">
+                                                                account_circle
+                                                            </span>@i.ClientPet.Client.Name - <span class="material-icons">
+                                                                pets
+                                                            </span> @i.ClientPet.Pet.Name
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </form>
+            <br />
+        </div>
+    </div>
+</div>

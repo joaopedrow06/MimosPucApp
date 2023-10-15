@@ -1,0 +1,17 @@
+﻿<h4>Cadastrar Pet</h4>
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="ClientName" Label="Nome" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="CellPhone" Label="Telefone" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="Email" Label="Email" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="Adress" Label="Endereço" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="HouseNumber" Label="Número" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="CEP" Label="CEP" Variant="Variant.Text"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="() => Submit(ClientName)">Ok</MudButton>
+    </DialogActions>
+</MudDialog>

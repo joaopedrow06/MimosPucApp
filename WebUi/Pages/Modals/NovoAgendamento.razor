@@ -1,0 +1,46 @@
+﻿<h4>Novo Agendamento</h4>
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudSelect T="Clients" Label="Cliente" Placeholder="Cliente" Variant="Variant.Outlined" Value="Client"
+                   ValueChanged="HandleClientChanged"
+                   ToStringFunc="@(e=> e==null?null : $"{e.Name}")" Clearable="true"
+                   MultiSelection="false">
+            @if(Clients is not null)
+            {
+                @foreach (var item in Clients.OrderBy(o => o.Name))
+                {
+                    <MudSelectItem T="Clients" Value=@item>@item.Name</MudSelectItem>
+                }
+            }
+        </MudSelect>
+        <MudSelect T="Pets" Label="Pet" Placeholder="Pet" Variant="Variant.Outlined" Value="Pet"
+                   ValueChanged="HandlePetChanged"
+                   ToStringFunc="@(e=> e==null?null : $"{e.Name}")" Clearable="true"
+                   MultiSelection="false">
+            @if (Pets is not null)
+            {                
+                @foreach (var item in Pets.OrderBy(o => o.Name))
+                {
+                    <MudSelectItem T="Pets" Value=@item>@item.Name</MudSelectItem>
+                }
+            }
+        </MudSelect>
+        <MudSelect T="Enum" Label="Pet" Placeholder="Pet" Variant="Variant.Outlined" Value="AppointmentType"
+                   ValueChanged="SetAppointment"
+                   MultiSelection="false">
+            @foreach (Enum item in Enum.GetValues(typeof(AppointmentNames)))
+            {
+                <MudSelectItem T="Enum" Value=@item>@item</MudSelectItem>
+            }
+        </MudSelect>
+        <MudDatePicker DateChanged="args =>HandleDayChange(args)" Label="Basic example" Date="Date" />
+
+        <MudTimePicker TimeChanged="args =>HandleHourChange(args)" Time="Time" PickerVariant="PickerVariant.Static" Color="Color.Primary" MinuteSelectionStep="30" OpenTo="OpenTo.Minutes" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="() => Submit()">Ok</MudButton>
+    </DialogActions>
+</MudDialog>

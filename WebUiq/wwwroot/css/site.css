@@ -1,0 +1,48 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.al-tc-lc {
+    position: absolute;
+    top: 30%;
+    left: 40%;
+    margin: -25px 0 0 -25px;
+}
+.al-tc-lc-index{
+    position: absolute;
+    top: 40%;
+    left: 10%;
+    margin: -25px 0 0 -25px;
+}
+.c-b-green {
+    background-color: #329583 !important;
+}
+.hr-menus {
+    position: absolute;
+    width: 1440px;
+    height: 0px;
+    left: 0px;
+    border: 2.5px solid #329583;
+}
+.bu-defaul {
+    width: 70px;
+    height: 70px;
+    max-height: 70px;
+    max-width: 70px;
+    font-size: 70%;
+}
